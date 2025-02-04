@@ -1,3 +1,6 @@
+from src.Deck import Deck
+
+
 def printWelcome():
     """
     printWelcome() greets the user.
@@ -51,3 +54,4 @@ def printOptions():
 printWelcome()
 printPineapple()
 printOptions()
+
