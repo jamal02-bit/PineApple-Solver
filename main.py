@@ -1,4 +1,5 @@
 from src.Deck import Deck
+from src.DeckUtil import DeckUtil
 
 
 def printWelcome():
@@ -42,13 +43,14 @@ def printOptions():
     """
     isRandom = input("Please enter 'r' if you want the 15 cards randomly generated.\nOtherwise, enter 15 cards in the from `(R)ank(s)uit` and don't add a space inbetween the commas.\n")
 
+    hand = DeckUtil()
     if (isRandom == "r"):
         print("Random generation selected.")
         # send a call to randomGeneration()
         # and print generated cards DeckGenerator::generateFantasyLandDeck()
     else:
         print("User generation selected.")
-        # Send cards to a parser
+        hand.parse(isRandom)
 
 # Call to functions
 printWelcome()

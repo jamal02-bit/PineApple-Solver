@@ -11,3 +11,6 @@ class Deck:
     
     def remove(self, card):
         self.cards.remove(card)
+
+    def __str__(self):
+        return f"Deck: {self.cards}"
