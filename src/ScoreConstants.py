@@ -1,31 +1,29 @@
 
 class ScoreConstants:
-    """
     topHand = {
-        PAIR6 = 1
-        PAIR7 = 2
-        PAIR8 = 3
-        PAIR9 = 4
-        PAIRT = 5
-        PAIRJ = 6
-        PAIRQ = 7
-        PAIRK = 8
-        PAIRA = 9
-        TRIP2 = 10
-        TRIP3 = 11
-        TRIP4 = 12
-        TRIP5 = 13
-        TRIP6 = 14
-        TRIP7 = 15
-        TRIP8 = 16
-        TRIP9 = 17
-        TRIPT = 18
-        TRIPJ = 19
-        TRIPQ = 20
-        TRIPK = 21
-        TRIPA = 22
+        "66": 1,
+        "77": 2,
+        "88": 3,
+        "99": 4,
+        "TT": 5,
+        "JJ": 6,
+        "QQ": 7,
+        "KK": 8,
+        "AA": 9,
+        "222": 10,
+        "333": 11,
+        "444": 12,
+        "555": 13,
+        "666": 14,
+        "777": 15,
+        "888": 16,
+        "999": 17,
+        "TTT": 18,
+        "JJJ": 19,
+        "QQQ": 20,
+        "KKK": 21,
+        "AAA": 22,
     }
-    """ 
 
     middleHand = {
         "High Card" : 0,

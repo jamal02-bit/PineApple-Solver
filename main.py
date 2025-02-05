@@ -61,6 +61,7 @@ def printOptions():
         hand.parse(opt)
     score = Score("","","")
     score.checkMiddleScore(["Ah","Kh","Qh","Jh","Th"])
+    score.checkTopScore(["Ah", "Ac", "Ad"])
 
 printWelcome()
 printPineapple()

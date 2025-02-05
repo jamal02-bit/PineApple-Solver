@@ -12,8 +12,6 @@ class Score:
         self.total = 0
 
     def checkMiddleScore(self, middle):
-
-        
         board = [
             Card.new(middle[0]), 
             Card.new(middle[1]),
@@ -38,4 +36,21 @@ class Score:
 
         print(f"Hand type: {hand_type}")
 
+    def checkTopScore(self, top):
+        top_joined = " ".join(top)
+        top_nums = "".join(x for x in top_joined if x.isupper() or x.isdigit())
+       
+        top_score = 0
+        for key in sc.topHand.keys():
+            if key in top_nums:
+                top_score = sc.topHand[key]
+
+        self.total += top_score
         
+        print(self.total)
+        print(top_nums)
+        pass
+    
+    def checkBottomScore(self, bottom):
+        pass
+    
