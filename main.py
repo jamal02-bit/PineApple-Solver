@@ -1,5 +1,6 @@
 from src.Deck import Deck
 from src.DeckUtil import DeckUtil
+from src.Score import Score
 
 
 def printWelcome():
@@ -58,7 +59,8 @@ def printOptions():
     else:
         print("User generation selected.")
         hand.parse(opt)
-
+    score = Score("","","")
+    score.checkMiddleScore(["Ah","Kh","Qh","Jh","Th"])
 
 printWelcome()
 printPineapple()
