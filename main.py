@@ -9,6 +9,7 @@ def printWelcome():
 
     print("Welcome to the PineAppleSolver!")
 
+
 def printPineapple():
     """
     printPineapple() prints ascii art of a pineapple.
@@ -36,23 +37,29 @@ def printPineapple():
     """
     print(pineapple)
 
+
 def printOptions():
     """
     printOptions() allows the user to select whether to randomly generate 15 cards
                    or to input 15 of their own in a specific format.
     """
-    isRandom = input("Please enter 'r' if you want the 15 cards randomly generated.\nOtherwise, enter 15 cards in the from `(R)ank(s)uit` and don't add a space inbetween the commas.\n")
+    opt = input(
+        "Please enter 'r' if you want the 15 cards randomly generated.\n"
+        "Otherwise, enter 15 cards in the from `(R)ank(s)uit`"
+        "and don't add a space inbetween the commas.\n")
 
-    hand = DeckUtil()
-    if (isRandom == "r"):
+    deck = Deck()
+    hand = DeckUtil(deck)
+
+    if opt == "r":
         print("Random generation selected.")
         hand.generateRandom(15)
 
     else:
         print("User generation selected.")
-        hand.parse(isRandom)
+        hand.parse(opt)
+
 
 printWelcome()
 printPineapple()
 printOptions()
-
