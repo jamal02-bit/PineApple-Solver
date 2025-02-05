@@ -14,3 +14,6 @@ class Deck:
 
     def __str__(self):
         return f"Deck: {self.cards}"
+    
+    def getCards(self):
+        return self.cards

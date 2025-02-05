@@ -1,4 +1,5 @@
 from src.Deck import Deck
+import random
 
 class DeckUtil:
 
@@ -6,16 +7,19 @@ class DeckUtil:
         self.deck = Deck()
 
     def parse(self, cards):
-        split_cards = cards.split(",")
+        hand = cards.split(",")
 
-        for card in split_cards:
+        for card in hand:
             self.deck.remove(card)
 
-        print(self.deck)
-        print(split_cards)
-
-        return split_cards
+        return hand
 
     def generateRandom(self, numberOfCards):
-        pass
-
+        hand = []
+        
+        for i in range(numberOfCards):
+            card = random.choice(self.deck.getCards())
+            hand.append(card)
+            self.deck.remove(card)
+        
+        return hand

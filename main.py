@@ -46,13 +46,12 @@ def printOptions():
     hand = DeckUtil()
     if (isRandom == "r"):
         print("Random generation selected.")
-        # send a call to randomGeneration()
-        # and print generated cards DeckGenerator::generateFantasyLandDeck()
+        hand.generateRandom(15)
+
     else:
         print("User generation selected.")
         hand.parse(isRandom)
 
-# Call to functions
 printWelcome()
 printPineapple()
 printOptions()
