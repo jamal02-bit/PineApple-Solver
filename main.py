@@ -63,7 +63,8 @@ def printOptions():
     # score.checkThreeCardScore(["Ah", "Ac", "Ad"])
     # score.checkFiveCardScore(["As","Kh","Qh","Jh","Th"], True)
     # score.checkFiveCardScore(["Ah","Kh","Qh","Jh","Th"], False)
-    score.isFoul([],["5c","3d","2s","2d","4h"],["Ad","Ac","Qh","Jh","9h"])
+    score.isFoul([],["Ac","Ah","Jc","Td","9h"],["Kd","Kc","Qh","Js","9s"])
+    score.convertThreeCardRank(["As","Ad","Qs"])
     
 
 printWelcome()

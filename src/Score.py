@@ -1,5 +1,7 @@
 from src.ScoreConstants import ScoreConstants as sc
+from src.ScoreConstants import RankOrder as ro
 from deuces import Card, Evaluator
+import math
 
 
 class Score:
@@ -10,7 +12,7 @@ class Score:
         self.middle = middle
         self.bottom = bottom
         self.total = 0
-        self.top_rank = self.setThreeCardRank(self.top)
+    
 
     def checkThreeCardScore(self, top):
         top_joined = " ".join(top)
@@ -60,74 +62,96 @@ class Score:
 
 
 
-    def setThreeCardRank(self, top):
+    def convertThreeCardRank(self, top):
         
         top_joined = " ".join(top)
         top_nums = "".join(x for x in top_joined if x.isupper() or x.isdigit())
+       
+       
         if len(set(top_nums)) == 1:
-            return "Three of a Kind"
+            
+            out = ro.cardRank[top_nums[0]] * 66 + 1609
+            print(out)
+            return ("Three of a Kind", out, True)
+        
+       
         elif len(set(top_nums)) == 2:
-            return "Pair"
+            
+            freq = {}
+            
+            for char in top_nums:
+                freq[char] = freq.get(char, 0) + 1
+            
+            pair = None
+            kicker = None
+            
+            for char, count in freq.items():
+                if count == 2:
+                    pair = char
+                elif count == 1:
+                    kicker = char
+
+            kickerRank = {}
+            n = 11
+
+            for key in ro.cardRank.keys():
+                if len(kickerRank) < 10:                    
+                    if pair == key:
+                        pass
+                    else:
+                        kickerRank[key] = n
+                        n -= 1
+            
+            out = ro.cardRank[pair] * 220 + 3105
+            
+            for key in kickerRank.keys():
+                out += math.comb(kickerRank[key], 2)
+                if key == kicker:
+                    break
+            
+            # print(out)
+            # print(pair, kicker)
+            print(f"Top score : {out}")
+            return ("Pair", out, True)
+        
+        
         else:
-            return "High Card"
-    
-    def convertThreeCardRank(self, rank):
-        if rank == "Three of a Kind":
-            pass
-        elif rank == "Pair":
-            pass
-        else:
-            pass
+
+            return ("High Card", 0, False)
     
     
     
     
     def isFoul(self, top, middle, bottom):
         
+        if True:
 
-        # Comparing middle to bottom
-        middle_board = [
-            Card.new(middle[0]), 
-            Card.new(middle[1]),
-            Card.new(middle[2])
-            ]
-        middle_hand = [
-            Card.new(middle[3]),
-            Card.new(middle[4])
-            ]
-        bottom_board = [
-            Card.new(bottom[0]), 
-            Card.new(bottom[1]),
-            Card.new(bottom[2])
-            ]
-        bottom_hand = [
-            Card.new(bottom[3]),
-            Card.new(bottom[4])
-            ]
-        
-        
-        evaluator = Evaluator()
-        middlescore = evaluator.evaluate(middle_board, middle_hand)
-        bottomscore = evaluator.evaluate(bottom_board, bottom_hand)
-
-        print(middlescore)
+            # Comparing middle to bottom
+            middle_board = [
+                Card.new(middle[0]), 
+                Card.new(middle[1]),
+                Card.new(middle[2])
+                ]
+            middle_hand = [
+                Card.new(middle[3]),
+                Card.new(middle[4])
+                ]
+            bottom_board = [
+                Card.new(bottom[0]), 
+                Card.new(bottom[1]),
+                Card.new(bottom[2])
+                ]
+            bottom_hand = [
+                Card.new(bottom[3]),
+                Card.new(bottom[4])
+                ]
 
 
+            evaluator = Evaluator()
+            middlescore = evaluator.evaluate(middle_board, middle_hand)
+            bottomscore = evaluator.evaluate(bottom_board, bottom_hand)
 
+            print(f"Middle Score : {middlescore}")
 
-
-
-
-
-
-
-
-        if bottomscore <= middlescore:
-            # print("Did not Foul")
-            pass
-        else:
-            # print("You Fouled")
-            return True
-        
-        
+            # return top <= middlescore or middlescore <= bottomscore
         return False
