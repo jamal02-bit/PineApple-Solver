@@ -60,8 +60,11 @@ def printOptions():
         print("User generation selected.")
         hand.parse(opt)
     score = Score("","","")
-    score.checkMiddleScore(["Ah","Kh","Qh","Jh","Th"])
-    score.checkTopScore(["Ah", "Ac", "Ad"])
+    # score.checkThreeCardScore(["Ah", "Ac", "Ad"])
+    # score.checkFiveCardScore(["As","Kh","Qh","Jh","Th"], True)
+    # score.checkFiveCardScore(["Ah","Kh","Qh","Jh","Th"], False)
+    score.isFoul([],["5c","3d","2s","2d","4h"],["Ad","Ac","Qh","Jh","9h"])
+    
 
 printWelcome()
 printPineapple()
