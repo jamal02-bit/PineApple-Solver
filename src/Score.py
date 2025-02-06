@@ -82,7 +82,7 @@ class Score:
             for char in top_nums:
                 freq[char] = freq.get(char, 0) + 1
             
-            pair = None
+            pair = ""
             kicker = None
             
             for char, count in freq.items():
@@ -116,42 +116,78 @@ class Score:
         
         
         else:
-
             return ("High Card", 0, False)
     
     
-    
-    
     def isFoul(self, top, middle, bottom):
+        # Comparing middle to bottom
+        middle_board = [
+            Card.new(middle[0]), 
+            Card.new(middle[1]),
+            Card.new(middle[2])
+            ]
+        middle_hand = [
+            Card.new(middle[3]),
+            Card.new(middle[4])
+            ]
+        bottom_board = [
+            Card.new(bottom[0]), 
+            Card.new(bottom[1]),
+            Card.new(bottom[2])
+            ]
+        bottom_hand = [
+            Card.new(bottom[3]),
+            Card.new(bottom[4])
+            ]
         
-        if True:
+        
+        evaluator = Evaluator()
+        middlescore = evaluator.evaluate(middle_board, middle_hand)
+        bottomscore = evaluator.evaluate(bottom_board, bottom_hand)
 
-            # Comparing middle to bottom
-            middle_board = [
-                Card.new(middle[0]), 
-                Card.new(middle[1]),
-                Card.new(middle[2])
-                ]
-            middle_hand = [
-                Card.new(middle[3]),
-                Card.new(middle[4])
-                ]
-            bottom_board = [
-                Card.new(bottom[0]), 
-                Card.new(bottom[1]),
-                Card.new(bottom[2])
-                ]
-            bottom_hand = [
-                Card.new(bottom[3]),
-                Card.new(bottom[4])
-                ]
+        print(f"Middle Score : {middlescore}")
+        print(f"Botttom Score : {bottomscore}")
 
+        if (True):
+            ## Top Logic Sorting
+            top_no_suit = []
+            for t in top:
+                top_no_suit.append(t[0])
 
-            evaluator = Evaluator()
-            middlescore = evaluator.evaluate(middle_board, middle_hand)
-            bottomscore = evaluator.evaluate(bottom_board, bottom_hand)
+            sorted_ranks = [ro.cardRank[str(rank)] for rank in top_no_suit]
+            sorted_ranks.sort()
 
-            print(f"Middle Score : {middlescore}")
+            sorted_top = [str(key) for key, value in ro.cardRank.items() if value in sorted_ranks]
 
-            # return top <= middlescore or middlescore <= bottomscore
+            print(f"Top:    {sorted_top}")
+            ## Top Logic Sorting
+
+            ## Middle Logic Sorting
+            middle_no_suit = []
+            for m in middle:
+                middle_no_suit.append(m[0])
+
+            sorted_mid_ranks = [ro.cardRank[str(rank)] for rank in middle_no_suit]
+            sorted_mid_ranks.sort()
+
+            sorted_mid = [str(key) for key, value in ro.cardRank.items() if value in sorted_mid_ranks]
+            sorted_mid = sorted_mid[0:3]
+            print(f"Middle: {sorted_mid}")
+            ## Middle Logic Sorting
+
+            ## Comparison Logic
+            bust = False
+            for i in range(3):
+                if ro.cardRank[sorted_mid[i]] > ro.cardRank[sorted_top[i]]:
+                    print("Foul")
+                    bust = True
+                    break
+                elif ro.cardRank[sorted_mid[i]] == ro.cardRank[sorted_top[i]]:
+                    print("equal cards") # go next
+                else:
+                    break
+            
+            if bust: print("Top is greater than mid.")
+            else: print("Hooray! Top is less than mid.")
+
         return False
