@@ -6,13 +6,19 @@ import math
 
 class Score:
     
-    
     def __init__(self, top, middle, bottom):
         self.top = top
         self.middle = middle
         self.bottom = bottom
         self.total = 0
-    
+
+        if not self.isFoul(self.top, self.middle, self.bottom):
+            self.checkThreeCardScore(self.top)
+            self.checkFiveCardScore(self.middle, True)
+            self.checkFiveCardScore(self.bottom, False)
+            print(f"Score : {self.total}. You did not foul!")
+        else:
+            print(f"Score : {self.total}. You fouled!!!!")
 
     def checkThreeCardScore(self, top):
         top_joined = " ".join(top)
@@ -24,9 +30,7 @@ class Score:
                 top_score = sc.topHand[key]
 
         self.total += top_score
-        
-        print(self.total)
-        print(top_nums)
+        return top_score
 
 
     def checkFiveCardScore(self, row, isMiddle):
@@ -52,13 +56,15 @@ class Score:
             hand_type = "Royal Flush"
         else:
             hand_type = evaluator.class_to_string(evaluator.get_rank_class(hand_rank))
-
+        score = 0
         if isMiddle:
-            self.total += sc.middleHand[hand_type]
+            score = sc.middleHand[hand_type]
         else:
-            self.total += sc.bottomHand[hand_type]
-        print(f"Hand type: {hand_type}")
-        print(self.total, isMiddle)
+            score = sc.bottomHand[hand_type]
+
+        self.total += score
+        
+        return score, hand_type
 
 
 
@@ -66,17 +72,13 @@ class Score:
         
         top_joined = " ".join(top)
         top_nums = "".join(x for x in top_joined if x.isupper() or x.isdigit())
-       
-       
+              
         if len(set(top_nums)) == 1:
             
             out = ro.cardRank[top_nums[0]] * 66 + 1609
-            print(out)
             return ("Three of a Kind", out, True)
-        
        
         elif len(set(top_nums)) == 2:
-            
             freq = {}
             
             for char in top_nums:
@@ -108,18 +110,14 @@ class Score:
                 out += math.comb(kickerRank[key], 2)
                 if key == kicker:
                     break
-            
-            # print(out)
-            # print(pair, kicker)
-            print(f"Top score : {out}")
             return ("Pair", out, True)
-        
         
         else:
             return ("High Card", 0, False)
     
     
     def isFoul(self, top, middle, bottom):
+        
         # Comparing middle to bottom
         middle_board = [
             Card.new(middle[0]), 
@@ -144,50 +142,41 @@ class Score:
         evaluator = Evaluator()
         middlescore = evaluator.evaluate(middle_board, middle_hand)
         bottomscore = evaluator.evaluate(bottom_board, bottom_hand)
+        
+        if middlescore < bottomscore: return True
+      
+        if self.convertThreeCardRank(top)[2] == False:
+            if self.checkFiveCardScore(middle, True)[1] == "High Card":
+                
+                top_no_suit = []
+                for t in top:
+                    top_no_suit.append(t[0])
 
-        print(f"Middle Score : {middlescore}")
-        print(f"Botttom Score : {bottomscore}")
+                sorted_ranks = [ro.cardRank[str(rank)] for rank in top_no_suit]
+                sorted_ranks.sort()
+                sorted_top = [str(key) for key, value in ro.cardRank.items() if value in sorted_ranks]
+                
+                middle_no_suit = []
+                for m in middle:
+                    middle_no_suit.append(m[0])
 
-        if (True):
-            ## Top Logic Sorting
-            top_no_suit = []
-            for t in top:
-                top_no_suit.append(t[0])
+                sorted_mid_ranks = [ro.cardRank[str(rank)] for rank in middle_no_suit]
+                sorted_mid_ranks.sort()
 
-            sorted_ranks = [ro.cardRank[str(rank)] for rank in top_no_suit]
-            sorted_ranks.sort()
+                sorted_mid = [str(key) for key, value in ro.cardRank.items() if value in sorted_mid_ranks]
+                sorted_mid = sorted_mid[0:3]
 
-            sorted_top = [str(key) for key, value in ro.cardRank.items() if value in sorted_ranks]
-
-            print(f"Top:    {sorted_top}")
-            ## Top Logic Sorting
-
-            ## Middle Logic Sorting
-            middle_no_suit = []
-            for m in middle:
-                middle_no_suit.append(m[0])
-
-            sorted_mid_ranks = [ro.cardRank[str(rank)] for rank in middle_no_suit]
-            sorted_mid_ranks.sort()
-
-            sorted_mid = [str(key) for key, value in ro.cardRank.items() if value in sorted_mid_ranks]
-            sorted_mid = sorted_mid[0:3]
-            print(f"Middle: {sorted_mid}")
-            ## Middle Logic Sorting
-
-            ## Comparison Logic
-            bust = False
-            for i in range(3):
-                if ro.cardRank[sorted_mid[i]] > ro.cardRank[sorted_top[i]]:
-                    print("Foul")
-                    bust = True
-                    break
-                elif ro.cardRank[sorted_mid[i]] == ro.cardRank[sorted_top[i]]:
-                    print("equal cards") # go next
-                else:
-                    break
-            
-            if bust: print("Top is greater than mid.")
-            else: print("Hooray! Top is less than mid.")
-
-        return False
+                bust = False
+                for i in range(3):
+                    if ro.cardRank[sorted_mid[i]] > ro.cardRank[sorted_top[i]]:
+                        bust = True
+                        break
+                    elif ro.cardRank[sorted_mid[i]] == ro.cardRank[sorted_top[i]]:
+                        continue
+                    else:
+                        break
+                if bust: return True
+            else:
+                return False
+        else:
+            return self.convertThreeCardRank(top)[1] < middlescore
