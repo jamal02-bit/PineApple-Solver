@@ -1,3 +1,4 @@
+from deuces import Card, Evaluator
 
 class ScoreConstants:
     topHand = {

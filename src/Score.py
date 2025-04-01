@@ -2,39 +2,45 @@ from src.ScoreConstants import ScoreConstants as sc
 from src.ScoreConstants import RankOrder as ro
 from deuces import Card, Evaluator
 import math
+from itertools import combinations
 
 
 class Score:
     
-    def __init__(self, top, middle, bottom):
+    def __init__(self, top = [], middle = [], bottom = []):
         self.top = top
         self.middle = middle
         self.bottom = bottom
+        self.allCards = {card: Card.new(card) for card in [
+            rank + suit for rank in "23456789TJQKA" for suit in "shdc"
+        ]}
+        self.evaluator = Evaluator()
         self.total = 0
-
-        if not self.isFoul(self.top, self.middle, self.bottom):
-            self.checkThreeCardScore(self.top)
-            self.checkFiveCardScore(self.middle, True)
-            self.checkFiveCardScore(self.bottom, False)
-            print(f"Score : {self.total}. You did not foul!")
-        else:
-            print(f"Score : {self.total}. You fouled!!!!")
+        if top and middle and bottom:
+            if not self.isFoul(self.top, self.middle, self.bottom):
+                self.checkThreeCardScore(self.top)
+                self.checkFiveCardScore(self.middle, True)
+                self.checkFiveCardScore(self.bottom, False)
+                print(f"Score : {self.total}. You did not foul!")
+            else:
+                print(f"Score : {self.total}. You fouled!!!!")
 
     def checkThreeCardScore(self, top):
         top_joined = " ".join(top)
         top_nums = "".join(x for x in top_joined if x.isupper() or x.isdigit())
+        top_nums_sorted = sorted(top_nums, key=lambda r: ro.cardRank[r])
+        joined = "".join(top_nums_sorted)
        
         top_score = 0
         for key in sc.topHand.keys():
-            if key in top_nums:
+            if key in joined:
                 top_score = sc.topHand[key]
 
         self.total += top_score
         return top_score
 
-
     def checkFiveCardScore(self, row, isMiddle):
-        
+        """
         board = [
             Card.new(row[0]), 
             Card.new(row[1]),
@@ -44,18 +50,21 @@ class Score:
             Card.new(row[3]),
             Card.new(row[4])
             ]
+        """
 
         # Instantiate evaluator
-        evaluator = Evaluator()
+        # evaluator = Evaluator()
 
         # Evaluate the hand (rank is returned as a number, with lower numbers being better hands)
-        hand_rank = evaluator.evaluate(board, hand)
+        board = [self.allCards[card] for card in row[:3]]
+        hand = [self.allCards[card] for card in row[3:]]
+        hand_rank = self.evaluator.evaluate(board, hand)
 
         # Get the hand type
         if hand_rank == 1:
             hand_type = "Royal Flush"
         else:
-            hand_type = evaluator.class_to_string(evaluator.get_rank_class(hand_rank))
+            hand_type = self.evaluator.class_to_string(self.evaluator.get_rank_class(hand_rank))
         score = 0
         if isMiddle:
             score = sc.middleHand[hand_type]
@@ -64,7 +73,7 @@ class Score:
 
         self.total += score
         
-        return score, hand_type
+        return score, hand_type, hand_rank
 
 
 
@@ -119,6 +128,11 @@ class Score:
     def isFoul(self, top, middle, bottom):
         
         # Comparing middle to bottom
+        middle_board = [self.allCards[card] for card in middle[:3]]
+        bottom_board = [self.allCards[card] for card in bottom[:3]]
+        middle_hand = [self.allCards[card] for card in middle[3:]]
+        bottom_hand = [self.allCards[card] for card in bottom[3:]]
+        """
         middle_board = [
             Card.new(middle[0]), 
             Card.new(middle[1]),
@@ -137,11 +151,11 @@ class Score:
             Card.new(bottom[3]),
             Card.new(bottom[4])
             ]
+        """
         
-        
-        evaluator = Evaluator()
-        middlescore = evaluator.evaluate(middle_board, middle_hand)
-        bottomscore = evaluator.evaluate(bottom_board, bottom_hand)
+        #evaluator = Evaluator()
+        middlescore = self.evaluator.evaluate(middle_board, middle_hand)
+        bottomscore = self.evaluator.evaluate(bottom_board, bottom_hand)
         
         if middlescore < bottomscore: return True
       
