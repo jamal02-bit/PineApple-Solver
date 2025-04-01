@@ -27,7 +27,7 @@ class DeckUtil:
 
         return hand
 
-    def generateRandom(self, numberOfCards):
+    def generateRandom(self, numberOfCards, isRemoving=False):
         """
         generateRandom() generates a random hand based on number of cards
 
@@ -43,10 +43,7 @@ class DeckUtil:
             card = random.choice(self.deck.getCards())
             if card not in hand:
                 hand.add(card)
+                if isRemoving:
+                    self.deck.remove(card)
                 hand_size += 1
-                
-        #for _ in range(numberOfCards):
-        #    card = random.choice(self.deck.getCards())
-        #    hand.append(card)
-        #    self.deck.remove(card)
         return hand

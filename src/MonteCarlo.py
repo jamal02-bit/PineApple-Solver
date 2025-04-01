@@ -7,6 +7,15 @@ from src.OptimalPlacement import OptimalPlacement
 from src.Score import Score
 
 class MonteCarlo:
+    """
+    monte_carlo_simulation()
+        Runs a monte carlo simulation on generated best_hands for a given n number of trials
+    Args:
+        n (int) : The number of trials
+
+    Returns:
+        (dict): {mean_score, standard_deviation, standard_error, confidence_interval, scores}
+    """  
     def monte_carlo_simulation(n):
         deck = Deck()
         hand = DeckUtil(deck)

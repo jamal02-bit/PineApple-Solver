@@ -39,8 +39,6 @@ class ScoreConstants:
         "Royal Flush" : 50
     }
 
-        
-
     bottomHand = {
         "High Card" : 0,
         "Pair" : 0,
@@ -54,8 +52,6 @@ class ScoreConstants:
         "Royal Flush" : 25
     }
     
-
-
 class RankOrder:
     cardRank = {
         "A" : 1,

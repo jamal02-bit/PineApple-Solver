@@ -11,7 +11,7 @@ class Score:
         self.top = top
         self.middle = middle
         self.bottom = bottom
-        self.allCards = {card: Card.new(card) for card in [
+        self.cards_to_score_cache = {card: Card.new(card) for card in [
             rank + suit for rank in "23456789TJQKA" for suit in "shdc"
         ]}
         self.evaluator = Evaluator()
@@ -40,24 +40,9 @@ class Score:
         return top_score
 
     def checkFiveCardScore(self, row, isMiddle):
-        """
-        board = [
-            Card.new(row[0]), 
-            Card.new(row[1]),
-            Card.new(row[2])
-            ]
-        hand = [
-            Card.new(row[3]),
-            Card.new(row[4])
-            ]
-        """
-
-        # Instantiate evaluator
-        # evaluator = Evaluator()
-
         # Evaluate the hand (rank is returned as a number, with lower numbers being better hands)
-        board = [self.allCards[card] for card in row[:3]]
-        hand = [self.allCards[card] for card in row[3:]]
+        board = [self.cards_to_score_cache[card] for card in row[:3]]
+        hand = [self.cards_to_score_cache[card] for card in row[3:]]
         hand_rank = self.evaluator.evaluate(board, hand)
 
         # Get the hand type
@@ -126,34 +111,12 @@ class Score:
     
     
     def isFoul(self, top, middle, bottom):
-        
         # Comparing middle to bottom
-        middle_board = [self.allCards[card] for card in middle[:3]]
-        bottom_board = [self.allCards[card] for card in bottom[:3]]
-        middle_hand = [self.allCards[card] for card in middle[3:]]
-        bottom_hand = [self.allCards[card] for card in bottom[3:]]
-        """
-        middle_board = [
-            Card.new(middle[0]), 
-            Card.new(middle[1]),
-            Card.new(middle[2])
-            ]
-        middle_hand = [
-            Card.new(middle[3]),
-            Card.new(middle[4])
-            ]
-        bottom_board = [
-            Card.new(bottom[0]), 
-            Card.new(bottom[1]),
-            Card.new(bottom[2])
-            ]
-        bottom_hand = [
-            Card.new(bottom[3]),
-            Card.new(bottom[4])
-            ]
-        """
+        middle_board = [self.cards_to_score_cache[card] for card in middle[:3]]
+        bottom_board = [self.cards_to_score_cache[card] for card in bottom[:3]]
+        middle_hand = [self.cards_to_score_cache[card] for card in middle[3:]]
+        bottom_hand = [self.cards_to_score_cache[card] for card in bottom[3:]]
         
-        #evaluator = Evaluator()
         middlescore = self.evaluator.evaluate(middle_board, middle_hand)
         bottomscore = self.evaluator.evaluate(bottom_board, bottom_hand)
         
