@@ -2,6 +2,7 @@ from src.Deck import Deck
 from src.DeckUtil import DeckUtil
 from src.Score import Score
 from src.OptimalPlacement import OptimalPlacement
+from src.MonteCarlo import MonteCarlo as mc
 from deuces import Card, Evaluator
 import time
 import os
@@ -60,22 +61,14 @@ def printOptions():
     if opt == "r":
         print("Random generation selected.")
         start = time.time()
-        x = hand.generateRandom(14)
-        print(x)
-        op = OptimalPlacement(x, Score())
-        op.threader(x)
+        mc.monte_carlo_simulation(10000)
+        #x = hand.generateRandom(14)
+        #print(x)
+        #op = OptimalPlacement(x, Score())
+        #op.threader(x)
         #{'Bottom': ['7d', '8s', '7s', '8d', '8c'], 'Middle': ['Jh', '5h', '6s', '5s', '6d'], 'Top': ('As', 'Qd', 'Qs'), 'Discard': ['Tc'], 'Score': 13
         end = time.time()
         print(end-start)
-    elif opt == "r monte":
-        results = []
-        for _ in range(1000):
-            x = hand.generateRandom(14)
-            op = OptimalPlacement(x, Score())
-            res = op.threader(x)
-            print(res)
-            results.append(res["Score"])
-        print(statistics.mean(results))
     else:
         print("User generation selected.")
         hand.parse(opt)    
